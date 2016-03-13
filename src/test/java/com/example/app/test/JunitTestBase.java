@@ -1,37 +1,42 @@
 package com.example.app.test;
 
-import com.example.app.ExampleModule;
+import org.gwizard.hibernate.HibernateModule;
+import org.gwizard.logging.LoggingModule;
+import org.jboss.resteasy.spi.ResteasyProviderFactory;
+import org.junit.Before;
+
+import com.example.app.ApplicationModule;
+import com.example.app.resource.exception.ApplicationExceptionMapper;
+import com.example.app.resource.filter.AuthenticationFilter;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Module;
 import com.google.inject.util.Modules;
+
 import lombok.extern.slf4j.Slf4j;
-import org.gwizard.hibernate.HibernateModule;
-import org.gwizard.logging.LoggingModule;
-import org.mockito.MockitoAnnotations;
-import org.testng.annotations.BeforeMethod;
 
 /**
  * Some common behavior for all tests. Sets up an injector suitable for executing JAXRS resources
  * directly, exactly as the web container would.
  */
 @Slf4j
-public class TestBase {
+public class JunitTestBase {
 
 	protected Injector injector;
 
 	/** */
-	@BeforeMethod
+	@Before
 	public void initializeTestBase() {
-		MockitoAnnotations.initMocks(this);
-
 		injector = Guice.createInjector(
 				Modules.override(
 					new LoggingModule(),
 					new HibernateModule(),
-					new ExampleModule(),
+					new ApplicationModule(),
 					new TestModule())
 						.with(overrideModule()));
+
+		ResteasyProviderFactory.getInstance().registerProvider(AuthenticationFilter.class);
+		ResteasyProviderFactory.getInstance().registerProvider(ApplicationExceptionMapper.class);
 	}
 
 	/** Override this method in a test class if you want special guice behavior */

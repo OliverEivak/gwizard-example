@@ -1,13 +1,20 @@
 package com.example.app.test;
 
-import com.example.app.ExampleConfig;
-import com.google.inject.AbstractModule;
-import com.google.inject.Provides;
-import lombok.extern.slf4j.Slf4j;
-import org.jboss.resteasy.specimpl.ResteasyHttpHeaders;
+import static org.hibernate.cfg.AvailableSettings.DIALECT;
+import static org.hibernate.cfg.AvailableSettings.HBM2DDL_AUTO;
+
 import javax.inject.Singleton;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MultivaluedHashMap;
+
+import org.jboss.resteasy.specimpl.ResteasyHttpHeaders;
+
+import com.example.app.ApplicationConfig;
+import com.google.inject.AbstractModule;
+import com.google.inject.Provides;
+
+import ch.qos.logback.classic.Level;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  */
@@ -23,13 +30,19 @@ public class TestModule extends AbstractModule {
 
 	@Provides
 	@Singleton
-	public ExampleConfig exampleConfig() {
-		ExampleConfig cfg = new ExampleConfig();
+	public ApplicationConfig exampleConfig() {
+		ApplicationConfig cfg = new ApplicationConfig();
+
+		cfg.getWeb().setPort(18080);
+		cfg.getWeb().getInitParameters().put("resteasy.role.based.security", "true");
+
 		cfg.getDatabase().setDriverClass("org.h2.Driver");
 		cfg.getDatabase().setUser("sa");
 		cfg.getDatabase().setUrl("jdbc:h2:mem:test");
-		cfg.getDatabase().getProperties().put("hibernate.dialect", "org.hibernate.dialect.H2Dialect");
-		cfg.getDatabase().getProperties().put("hibernate.hbm2ddl.auto", "create");
+		cfg.getDatabase().getProperties().put(DIALECT, "org.hibernate.dialect.H2Dialect");
+		cfg.getDatabase().getProperties().put(HBM2DDL_AUTO, "create");
+
+		cfg.getLogging().getLoggers().put("com.example.app", Level.TRACE);
 
 		return cfg;
 	}

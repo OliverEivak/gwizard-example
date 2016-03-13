@@ -1,9 +1,12 @@
 package com.example.app.services;
 
-import com.google.common.util.concurrent.AbstractIdleService;
-import lombok.extern.slf4j.Slf4j;
-import org.gwizard.services.Services;
 import javax.inject.Inject;
+
+import org.gwizard.services.Services;
+
+import com.google.common.util.concurrent.AbstractIdleService;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Example of a random service of your own devising. Guava services are started in parallel,
@@ -26,5 +29,9 @@ public class ExampleService extends AbstractIdleService {
     @Override
     protected void shutDown() throws Exception {
         log.debug("ExampleService shutting down...");
+    }
+
+    public String getHelloWorld() {
+        return "Hello World";
     }
 }

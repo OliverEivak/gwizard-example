@@ -1,25 +1,31 @@
 package com.example.app;
 
-import com.example.app.entity.Thing;
-import com.example.app.test.TestBase;
-import com.google.inject.Module;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
+import java.util.List;
+
+import javax.annotation.security.RolesAllowed;
+import javax.ws.rs.ClientErrorException;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+
 import org.gwizard.rest.RestModule;
 import org.gwizard.services.Run;
 import org.jboss.resteasy.client.jaxrs.ResteasyClient;
 import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
 import org.jboss.resteasy.client.jaxrs.ResteasyWebTarget;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import java.util.List;
-import java.util.UUID;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.hasSize;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
+import com.example.app.entity.Thing;
+import com.example.app.resource.filter.AuthHeadersRequestFilter;
+import com.example.app.test.JunitTestBase;
+import com.google.inject.Module;
 
 /**
  * <p>This test starts the full web stack and issues real http requests against the target. Compare this against
@@ -29,7 +35,7 @@ import static org.hamcrest.Matchers.hasSize;
  * <p>IMNSHO, directly testing resources provides a "sweet spot" that lets you build a large amount of coverage
  * very quickly. However, you may wish to throw in a few web stack tests anyways.</p>
  */
-public class FullWebStackTests extends TestBase {
+public class FullWebStackTests extends JunitTestBase {
 
 	/** We need to get the RestModule included if we want the web stack to run */
 	@Override
@@ -37,18 +43,18 @@ public class FullWebStackTests extends TestBase {
 		return new RestModule();
 	}
 
-	@BeforeMethod
+	@Before
 	public void setUpWebStack() throws Exception {
 		injector.getInstance(Run.class).start();
 	}
 
-	@AfterMethod
+	@After
 	public void tearDownWebStack() throws Exception {
 		injector.getInstance(Run.class).stop();
 	}
 
 	/**
-	 * This is for the RESTeasy client framework. If you want to do a lot of this this kind of coding/testing,
+	 * This is for the RESTeasy getClient framework. If you want to do a lot of this this kind of coding/testing,
 	 * it's a good idea to put the interface in the main project and make the resource classes impl the interface.
 	 */
 	@Path("/things")
@@ -61,36 +67,78 @@ public class FullWebStackTests extends TestBase {
 
 		@GET
 		@Path("{thingId}")
-		Thing get(@PathParam("thingId") UUID thingId);
+		Thing get(@PathParam("thingId") Long thingId);
+
+		@GET
+		@RolesAllowed({"USER"})
+		@Path("secret")
+		List<Thing> listSecretly();
+
+		@GET
+		@Path("ex")
+		Thing getException();
 	}
 
-	private ThingsClient client() {
+	private ThingsClient getClient() {
 		ResteasyClient client = new ResteasyClientBuilder().build();
-		ResteasyWebTarget target = client.target("http://localhost:8080/");
 
+		ResteasyWebTarget target = client.target("http://localhost:18080/");
+		return target.proxy(ThingsClient.class);
+	}
+
+	private ThingsClient getClientWithAuthentication(String token, String username) {
+		ResteasyClient client = new ResteasyClientBuilder().build();
+		client.register(new AuthHeadersRequestFilter(token, username));
+
+		ResteasyWebTarget target = client.target("http://localhost:18080/");
 		return target.proxy(ThingsClient.class);
 	}
 
 	@Test
 	public void thingsCanBeCreatedAndRetrieved() throws Exception {
-		ThingsClient things = client();
+		ThingsClient things = getClient();
 
 		Thing created = things.create();
 
 		Thing fetched = things.get(created.getId());
 
-		assertThat(fetched.getName(), equalTo(created.getName()));
+		assertEquals(created.getName(), fetched.getName());
 	}
 
 	@Test
 	public void thingsCanBeListed() throws Exception {
-		ThingsClient things = client();
+		ThingsClient things = getClient();
 
 		Thing created = things.create();
 
 		List<Thing> fetched = things.list();
 
-		assertThat(fetched, hasSize(1));
-		assertThat(fetched.get(0).getName(), equalTo(created.getName()));
+		assertTrue(fetched.size() > 1);
+		assertTrue(fetched.contains(created));
 	}
+
+	@Test
+	public void secretThingsCanNotBeListedWithoutAuthentication() throws Exception {
+		ThingsClient things = getClient();
+
+		try {
+			List<Thing> fetched = things.listSecretly();
+			fail("Exception expected");
+		} catch (ClientErrorException expected) {
+
+		}
+	}
+
+	@Test
+	public void secretThingsCanBeListedWithAuthentication() throws Exception {
+		ThingsClient things = getClientWithAuthentication("asd", "john");
+
+		Thing created = things.create();
+
+		List<Thing> fetched = things.list();
+
+		assertTrue(fetched.size() > 1);
+		assertTrue(fetched.contains(created));
+	}
+
 }

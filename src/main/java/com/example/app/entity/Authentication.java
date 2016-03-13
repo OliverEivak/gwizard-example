@@ -1,29 +1,29 @@
 package com.example.app.entity;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-/**
- * Some random JPA entity
- */
 @Entity
 @Data
 @NoArgsConstructor
-public class Thing {
+public class Authentication {
 
 	@Id
 	@GeneratedValue
 	private Long id;
 
-	/** */
-	private String name;
+	@Column(nullable = false)
+	private String token;
 
-	/** */
-	public Thing(String name) {
-		this.name = name;
-	}
+	@ManyToOne
+	@JoinColumn(name = "user", nullable = false)
+	private User user;
+
 }

@@ -1,22 +1,34 @@
-# GWizard Example
-
-This is a very very simple REST server that demonstrates how to use GWizard. You are encouraged to fork this
-project as a starting point.
+# A modified GWizard Example
+A WIP to add more useful basic functionalities to the gwizard example project.
 
 ## Running
 
-To run this code:
-
 ```
 $ mvn install
-$ java -jar target/gwizard-example-1.0-SNAPSHOT.jar test.yml
+$ java -jar target/gwizard-example-1.0-SNAPSHOT.jar properties.yml
 ```
 
-The most exciting endpoint is probably: http://localhost:8081/fun/headers
+# Changelog
+* Can build fat jar
+* Use reflection to find Resources
+* Mysql support
+* import.sql for tests
+* Switched to Junit and EasyMock
+* Example tests for DAO and Service layer too
+* Shut down application from command line
+* Configured logging to file
+* Made BaseDAO, BaseResource
+* Allow configuring initParameters for ServeletContextHolder
+    * Enabled RestEasy @RolesAllowed
+    * Added custom authentication filter
+    * Added FullWebStackTest for authentication
+* Added custom exception mapping
 
-(Note that test.yml changes the port from the default of 8080, just to demonstrate)
-
-## GWizard
-
-For more information about GWizard:
-https://github.com/stickfigure/gwizard
+# TODO
+* Add more tests
+* Make a BaseEntity
+* Providers as separate classes maybe
+* Add more hibernate configuration
+* Find a good place where to register providers for ResteasyProviderFactory
+* Add an update method, test it
+* Create a testdata.sql
