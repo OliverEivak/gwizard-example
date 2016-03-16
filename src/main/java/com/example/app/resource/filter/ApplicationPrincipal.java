@@ -21,4 +21,8 @@ public class ApplicationPrincipal implements Principal {
     public Role getRole() {
         return authentication.getUser().getRole();
     }
+
+    public Authentication getAuthentication() {
+        return authentication;
+    }
 }

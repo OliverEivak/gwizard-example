@@ -8,7 +8,7 @@ import java.util.List;
 import org.junit.Test;
 
 import com.example.app.entity.Thing;
-import com.example.app.test.JunitTestBase;
+import com.example.app.test.TestBase;
 
 /**
  * This tests the resource methods against a real in-memory database, no need to mock and stub the whole data
@@ -16,7 +16,7 @@ import com.example.app.test.JunitTestBase;
  * interaction with the data layer. If you're going to screw something up, it's likely to be all the hibernate
  * interaction.
  */
-public class ThingResourceTest extends JunitTestBase {
+public class ThingResourceTest extends TestBase {
 
 	@Test
 	public void thingsCanBeCreatedAndRetrieved() throws Exception {

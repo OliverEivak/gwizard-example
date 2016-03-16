@@ -33,12 +33,14 @@ public class TestModule extends AbstractModule {
 	public ApplicationConfig exampleConfig() {
 		ApplicationConfig cfg = new ApplicationConfig();
 
-		cfg.getWeb().setPort(18080);
+		cfg.setShutdownPort(10777);
+
+		cfg.getWeb().setPort(FullWebStackTestBase.TEST_PORT);
 		cfg.getWeb().getInitParameters().put("resteasy.role.based.security", "true");
 
 		cfg.getDatabase().setDriverClass("org.h2.Driver");
 		cfg.getDatabase().setUser("sa");
-		cfg.getDatabase().setUrl("jdbc:h2:mem:test");
+		cfg.getDatabase().setUrl("jdbc:h2:mem:test;MODE=MySQL;DATABASE_TO_UPPER=false");
 		cfg.getDatabase().getProperties().put(DIALECT, "org.hibernate.dialect.H2Dialect");
 		cfg.getDatabase().getProperties().put(HBM2DDL_AUTO, "create");
 

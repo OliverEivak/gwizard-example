@@ -8,6 +8,7 @@
 #
 
 foo: bar
+shutdownPort: 10777
 
 web:
   port: 8081

@@ -8,27 +8,33 @@ $ mvn install
 $ java -jar target/gwizard-example-1.0-SNAPSHOT.jar properties.yml
 ```
 
-# Changelog
+**Note:** this project needs gwizard-hibernate 0.7-SNAPSHOT
+
+Stopping
+```
+java -jar target/gwizard-example-1.0-SNAPSHOT.jar properties.yml stop
+```
+
+# Changes compared to the original example
 * Can build fat jar
-* Use reflection to find Resources
+* Use reflection to find services and resources
 * Mysql support
 * import.sql for tests
 * Switched to Junit and EasyMock
-* Example tests for DAO and Service layer too
+* Tests for DAO, Service and Resource layer
 * Shut down application from command line
 * Configured logging to file
-* Made BaseDAO, BaseResource
-* Allow configuring initParameters for ServeletContextHolder
-    * Enabled RestEasy @RolesAllowed
-    * Added custom authentication filter
-    * Added FullWebStackTest for authentication
-* Added custom exception mapping
+* BaseDAO, BaseResource
+* Configurable initParameters for ServletContextHolder
+    * RestEasy @RolesAllowed enabled
+    * Custom authentication filter
+    * Tests for authentication
+* Custom exception mapping
+* Registration (using bcrypt for passwords)
+* Log in and log out
+* Cobertura configuration in pom
 
-# TODO
-* Add more tests
+## TODO
 * Make a BaseEntity
-* Providers as separate classes maybe
 * Add more hibernate configuration
-* Find a good place where to register providers for ResteasyProviderFactory
-* Add an update method, test it
-* Create a testdata.sql
+* Providers as separate classes maybe

@@ -4,12 +4,8 @@ import javax.inject.Singleton;
 
 import org.gwizard.hibernate.DatabaseConfig;
 import org.gwizard.logging.LoggingConfig;
-import org.gwizard.web.WebConfig;
 import org.gwizard.web.WebServer;
 
-import com.example.app.services.ExampleService;
-import com.example.app.services.ShutdownService;
-import com.example.app.services.ThingService;
 import com.example.app.util.ReflectionUtils;
 import com.example.app.web.ApplicationWebConfig;
 import com.example.app.web.ApplicationWebServer;
@@ -35,14 +31,15 @@ public class ApplicationModule extends AbstractModule {
 	protected void configure() {
 		bind(WebServer.class).to(ApplicationWebServer.class);
 
-		for (Class resource : ReflectionUtils.getResourceClasses()) {
+		for (Class resource : ReflectionUtils.getResources()) {
 			log.debug("Binding resource " + resource.getSimpleName());
 			bind(resource);
 		}
 
-		bind(ShutdownService.class).asEagerSingleton();
-		bind(ExampleService.class).asEagerSingleton();
-		bind(ThingService.class).asEagerSingleton();
+		for (Class service : ReflectionUtils.getServices()) {
+			log.debug("Binding service " + service.getSimpleName());
+			bind(service).asEagerSingleton();
+		}
 	}
 
 	/** This objectmapper will get used for RESTEasy's JSON responses */

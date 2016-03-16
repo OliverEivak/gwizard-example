@@ -2,12 +2,10 @@ package com.example.app.test;
 
 import org.gwizard.hibernate.HibernateModule;
 import org.gwizard.logging.LoggingModule;
-import org.jboss.resteasy.spi.ResteasyProviderFactory;
 import org.junit.Before;
 
 import com.example.app.ApplicationModule;
-import com.example.app.resource.exception.ApplicationExceptionMapper;
-import com.example.app.resource.filter.AuthenticationFilter;
+import com.example.app.guice.GuiceInjector;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Module;
@@ -20,7 +18,7 @@ import lombok.extern.slf4j.Slf4j;
  * directly, exactly as the web container would.
  */
 @Slf4j
-public class JunitTestBase {
+public class TestBase {
 
 	protected Injector injector;
 
@@ -35,8 +33,7 @@ public class JunitTestBase {
 					new TestModule())
 						.with(overrideModule()));
 
-		ResteasyProviderFactory.getInstance().registerProvider(AuthenticationFilter.class);
-		ResteasyProviderFactory.getInstance().registerProvider(ApplicationExceptionMapper.class);
+		GuiceInjector.setInjector(injector);
 	}
 
 	/** Override this method in a test class if you want special guice behavior */

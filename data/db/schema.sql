@@ -10,7 +10,8 @@ CREATE TABLE Thing (
 CREATE TABLE User (
   id         BIGINT AUTO_INCREMENT PRIMARY KEY,
   username   VARCHAR(255)       UNIQUE NOT NULL,
-  role       VARCHAR(255)              NOT NULL
+  role       VARCHAR(255)              NOT NULL,
+  password   TINYBLOB                  NOT NULL
 );
 
 CREATE TABLE Authentication (

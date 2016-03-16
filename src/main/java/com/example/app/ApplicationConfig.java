@@ -3,7 +3,6 @@ package com.example.app;
 import org.gwizard.healthchecks.HealthChecksConfig;
 import org.gwizard.hibernate.DatabaseConfig;
 import org.gwizard.logging.LoggingConfig;
-import org.gwizard.web.WebConfig;
 
 import com.example.app.web.ApplicationWebConfig;
 
@@ -20,6 +19,7 @@ public class ApplicationConfig {
 
 	/** A bit of configuration for your own app */
 	private String foo;
+	private int shutdownPort;
 
 	/** Some standard bits of configuration */
 	private LoggingConfig logging = new LoggingConfig();

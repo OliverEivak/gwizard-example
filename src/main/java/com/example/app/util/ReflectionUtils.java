@@ -1,41 +1,44 @@
 package com.example.app.util;
 
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
+import java.io.IOException;
+import java.util.HashSet;
 import java.util.Set;
 
-import org.reflections.Reflections;
-import org.reflections.scanners.ResourcesScanner;
-import org.reflections.scanners.SubTypesScanner;
-import org.reflections.util.ClasspathHelper;
-import org.reflections.util.ConfigurationBuilder;
-import org.reflections.util.FilterBuilder;
-
 import com.example.app.resource.BaseResource;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.reflect.ClassPath;
+import com.google.common.util.concurrent.Service;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class ReflectionUtils {
 
-    public static Set<Class<?>> getResourceClasses() {
-        List<ClassLoader> classLoadersList = new LinkedList<>();
-        classLoadersList.add(ClasspathHelper.contextClassLoader());
-        classLoadersList.add(ClasspathHelper.staticClassLoader());
+    public static Set<Class<?>> getResources() {
+        return getClasses("com.example.app.resource", BaseResource.class);
+    }
 
-        Reflections reflections = new Reflections(new ConfigurationBuilder()
-                .setScanners(new SubTypesScanner(false /* don't exclude Object.class */), new ResourcesScanner())
-                .setUrls(ClasspathHelper.forClassLoader(classLoadersList.toArray(new ClassLoader[0])))
-                .filterInputsBy(new FilterBuilder().include(FilterBuilder.prefix("com.example.app.resource"))));
+    public static Set<Class<?>> getServices() {
+        return getClasses("com.example.app.services", Service.class);
+    }
 
-        Set<Class<?>> classes = reflections.getSubTypesOf(Object.class);
+    public static Set<Class<?>> getClasses(String packagePrefix, Class superClass) {
+        Set<Class<?>> result = new HashSet<>();
 
-        for (Iterator<Class<?>> iterator = classes.iterator(); iterator.hasNext();) {
-            Class resource = iterator.next();
-            if (!resource.getSuperclass().equals(BaseResource.class)) {
-                iterator.remove();
+        try {
+            ClassPath classPath = ClassPath.from(Thread.currentThread().getContextClassLoader());
+            ImmutableSet<ClassPath.ClassInfo> classes = classPath.getTopLevelClasses(packagePrefix);
+            for (ClassPath.ClassInfo classInfo : classes) {
+                Class clazz = classInfo.load();
+                if (superClass.isAssignableFrom(clazz) && !superClass.equals(clazz)) {
+                    result.add(clazz);
+                }
             }
+        } catch (IOException e) {
+
         }
 
-        return classes;
+        return result;
     }
 
 }

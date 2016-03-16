@@ -7,7 +7,7 @@ import javax.persistence.EntityTransaction;
 import org.junit.After;
 import org.junit.Before;
 
-public class DAOTestBase extends JunitTestBase {
+public class DAOTestBase extends TestBase {
 
     @Before
     public void beginTransaction() {

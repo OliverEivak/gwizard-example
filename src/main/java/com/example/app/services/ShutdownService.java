@@ -9,6 +9,8 @@ import javax.inject.Inject;
 
 import org.gwizard.services.Services;
 
+import com.example.app.ApplicationConfig;
+import com.example.app.Main;
 import com.example.app.util.SocketUtils;
 import com.google.common.util.concurrent.AbstractExecutionThreadService;
 
@@ -20,7 +22,8 @@ public class ShutdownService extends AbstractExecutionThreadService {
     public static byte SHUTDOWN = 1;
     public static byte SERVICE_STOP = 2;
 
-    public static int SHUTDOWN_SERVICE_PORT = 10777;
+    @Inject
+    private ApplicationConfig config;
 
     @Inject
     public ShutdownService(Services services) {
@@ -30,6 +33,8 @@ public class ShutdownService extends AbstractExecutionThreadService {
     @Override
     protected void startUp() throws Exception {
         log.debug("ShutdownService starting...");
+
+        stopOtherApplication();
     }
 
     @Override
@@ -37,9 +42,18 @@ public class ShutdownService extends AbstractExecutionThreadService {
         log.debug("ShutdownService shutting down...");
     }
 
+    private void stopOtherApplication() throws Exception {
+        if (Main.arguments != null && Main.arguments.length == 2) {
+            if ("stop".equals(Main.arguments[1])) {
+                SocketUtils.sendByte(InetAddress.getByName(null), config.getShutdownPort(), SHUTDOWN);
+                stopApplication();
+            }
+        }
+    }
+
     @Override
     protected void run() throws Exception {
-        ServerSocket serverSocket = new ServerSocket(SHUTDOWN_SERVICE_PORT, 0, InetAddress.getByName(null));
+        ServerSocket serverSocket = new ServerSocket(config.getShutdownPort(), 0, InetAddress.getByName(null));
         Socket socket = serverSocket.accept();
 
         // read
@@ -61,7 +75,7 @@ public class ShutdownService extends AbstractExecutionThreadService {
     protected void triggerShutdown() {
         try {
             // Send the signal to stop this service
-            SocketUtils.sendByte(InetAddress.getByName(null), SHUTDOWN_SERVICE_PORT, SERVICE_STOP);
+            SocketUtils.sendByte(InetAddress.getByName(null), config.getShutdownPort(), SERVICE_STOP);
         } catch (Exception e) {
 
         }
