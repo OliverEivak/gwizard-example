@@ -27,7 +27,6 @@ public class AuthenticationFilter implements ContainerRequestFilter {
         String token = headers.getFirst("Auth-Token");
         String username = headers.getFirst("Username");
 
-        log.info("AuthenticationFilter");
         Authentication authentication = getInjector().getInstance(AuthenticationDAO.class).findByToken(token);
 
         if (authentication != null && username.equals(authentication.getUser().getUsername())) {
