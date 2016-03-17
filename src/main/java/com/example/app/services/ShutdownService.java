@@ -34,7 +34,9 @@ public class ShutdownService extends AbstractExecutionThreadService {
     protected void startUp() throws Exception {
         log.debug("ShutdownService starting...");
 
-        stopOtherApplication();
+        if (shouldStop()) {
+            stopOtherApplication();
+        }
     }
 
     @Override
@@ -43,17 +45,32 @@ public class ShutdownService extends AbstractExecutionThreadService {
     }
 
     private void stopOtherApplication() throws Exception {
-        if (Main.arguments != null && Main.arguments.length == 2) {
-            if ("stop".equals(Main.arguments[1])) {
-                SocketUtils.sendByte(InetAddress.getByName(null), config.getShutdownPort(), SHUTDOWN);
-                stopApplication();
-            }
+        InetAddress address = InetAddress.getByName(null);
+        int port = config.getShutdownPort();
+
+        log.info(String.format("ShutdownService sending stop command to %s:%s", address, port));
+
+        try {
+            SocketUtils.sendByte(address, config.getShutdownPort(), SHUTDOWN);
+        } catch (Exception e) {
+            log.error("Failed to stop running application.");
         }
+
+        stopApplication();
     }
 
     @Override
     protected void run() throws Exception {
-        ServerSocket serverSocket = new ServerSocket(config.getShutdownPort(), 0, InetAddress.getByName(null));
+        if (shouldStop()) {
+            return;
+        }
+
+        InetAddress address = InetAddress.getByName(null);
+        int port = config.getShutdownPort();
+
+        log.info(String.format("ShutdownService listening on %s:%s", address, port));
+
+        ServerSocket serverSocket = new ServerSocket(port, 0, address);
         Socket socket = serverSocket.accept();
 
         // read
@@ -79,6 +96,10 @@ public class ShutdownService extends AbstractExecutionThreadService {
         } catch (Exception e) {
 
         }
+    }
+
+    private boolean shouldStop() {
+        return Main.arguments != null && Main.arguments.length == 2 && "stop".equals(Main.arguments[1]);
     }
 
     /**

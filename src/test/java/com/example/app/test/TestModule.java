@@ -33,7 +33,7 @@ public class TestModule extends AbstractModule {
 	public ApplicationConfig exampleConfig() {
 		ApplicationConfig cfg = new ApplicationConfig();
 
-		cfg.setShutdownPort(10777);
+		cfg.setShutdownPort(10666);
 
 		cfg.getWeb().setPort(FullWebStackTestBase.TEST_PORT);
 		cfg.getWeb().getInitParameters().put("resteasy.role.based.security", "true");
