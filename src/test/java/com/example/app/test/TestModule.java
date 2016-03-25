@@ -37,6 +37,8 @@ public class TestModule extends AbstractModule {
 
 		cfg.getWeb().setPort(FullWebStackTestBase.TEST_PORT);
 		cfg.getWeb().getInitParameters().put("resteasy.role.based.security", "true");
+		cfg.getWeb().getInitParameters().put("resteasy.providers", "com.example.app.resource.filter.AuthenticationFilter,"
+				+ "com.example.app.resource.exception.ApplicationExceptionMapper");
 
 		cfg.getDatabase().setDriverClass("org.h2.Driver");
 		cfg.getDatabase().setUser("sa");

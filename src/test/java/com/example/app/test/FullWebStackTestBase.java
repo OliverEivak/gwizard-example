@@ -5,15 +5,13 @@ import org.gwizard.services.Run;
 import org.jboss.resteasy.client.jaxrs.ResteasyClient;
 import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
 import org.jboss.resteasy.client.jaxrs.ResteasyWebTarget;
-import org.jboss.resteasy.spi.ResteasyProviderFactory;
 import org.junit.After;
 import org.junit.Before;
 
 import com.example.app.entity.Authentication;
 import com.example.app.resource.Login;
-import com.example.app.resource.exception.ApplicationExceptionMapper;
+import com.example.app.resource.Logout;
 import com.example.app.resource.filter.AuthHeadersRequestFilter;
-import com.example.app.resource.filter.AuthenticationFilter;
 import com.google.inject.Module;
 
 import lombok.extern.slf4j.Slf4j;
@@ -37,18 +35,11 @@ public class FullWebStackTestBase<T> extends TestBase {
     @Before
     public void setUpWebStack() throws Exception {
         injector.getInstance(Run.class).start();
-
-        registerResteasyProviders();
     }
 
     @After
     public void tearDownWebStack() throws Exception {
         injector.getInstance(Run.class).stop();
-    }
-
-    private void registerResteasyProviders() {
-        ResteasyProviderFactory.getInstance().registerProvider(AuthenticationFilter.class);
-        ResteasyProviderFactory.getInstance().registerProvider(ApplicationExceptionMapper.class);
     }
 
     protected T getClient(Class<T> resourceInterface) {
@@ -75,8 +66,14 @@ public class FullWebStackTestBase<T> extends TestBase {
         return loginClient.login(loginForm);
     }
 
-    protected void logout() {
-        // TODO
+    protected void logout(Authentication authentication) {
+        ResteasyClient client = new ResteasyClientBuilder().build();
+        client.register(new AuthHeadersRequestFilter(authentication.getToken(), authentication.getUser().getUsername()));
+
+        ResteasyWebTarget target = client.target(String.format("http://localhost:%s/", TEST_PORT));
+        Logout logoutClient = target.proxy(Logout.class);
+
+        logoutClient.logout();
     }
 
 }

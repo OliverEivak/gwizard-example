@@ -9,11 +9,8 @@ import org.gwizard.logging.LoggingModule;
 import org.gwizard.metrics.MetricsModule;
 import org.gwizard.rest.RestModule;
 import org.gwizard.services.Run;
-import org.jboss.resteasy.spi.ResteasyProviderFactory;
 
 import com.example.app.guice.GuiceInjector;
-import com.example.app.resource.exception.ApplicationExceptionMapper;
-import com.example.app.resource.filter.AuthenticationFilter;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 
@@ -43,9 +40,6 @@ public class Main {
 
 		injector.getInstance(Run.class).start();
 		GuiceInjector.setInjector(injector);
-
-		ResteasyProviderFactory.getInstance().registerProvider(AuthenticationFilter.class);
-		ResteasyProviderFactory.getInstance().registerProvider(ApplicationExceptionMapper.class);
 	}
 
 }

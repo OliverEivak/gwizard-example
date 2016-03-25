@@ -29,6 +29,7 @@ java -jar target/gwizard-example-1.0-SNAPSHOT.jar properties.yml stop
     * RestEasy @RolesAllowed enabled
     * Custom authentication filter
     * Tests for authentication
+    * Params are also used to list RestEasy providers
 * Custom exception mapping
 * Registration (using bcrypt for passwords)
 * Log in and log out
@@ -36,5 +37,4 @@ java -jar target/gwizard-example-1.0-SNAPSHOT.jar properties.yml stop
 
 ## TODO
 * Make a BaseEntity
-* Add more hibernate configuration
 * Providers as separate classes maybe
