@@ -36,6 +36,11 @@
 			<artifactId>hibernate-validator</artifactId>
 			<version>5.1.3.Final</version>
 		</dependency>
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-c3p0</artifactId>
+			<version>5.0.0.CR3</version>
+		</dependency>
 
 		<!--
 		You may ask yourself, how did I get here? And which of these jars do I need?
