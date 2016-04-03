@@ -10,7 +10,7 @@ import javax.ws.rs.core.MediaType;
 @Path("/logout")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public interface Logout {
+public interface ILogoutResource {
 
     @POST
     @RolesAllowed({"USER"})

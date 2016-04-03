@@ -9,10 +9,12 @@ import org.junit.After;
 import org.junit.Before;
 
 import com.example.app.entity.Authentication;
-import com.example.app.resource.Login;
-import com.example.app.resource.Logout;
+import com.example.app.guice.module.ApplicationRestModule;
+import com.example.app.resource.ILoginResource;
+import com.example.app.resource.ILogoutResource;
 import com.example.app.resource.filter.AuthHeadersRequestFilter;
 import com.google.inject.Module;
+import com.google.inject.util.Modules;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -29,7 +31,7 @@ public class FullWebStackTestBase<T> extends TestBase {
      */
     @Override
     protected Module overrideModule() {
-        return new RestModule();
+        return Modules.combine(new RestModule(), new ApplicationRestModule());
     }
 
     @Before
@@ -60,9 +62,9 @@ public class FullWebStackTestBase<T> extends TestBase {
     protected Authentication login(String username, String password) {
         ResteasyClient client = new ResteasyClientBuilder().build();
         ResteasyWebTarget target = client.target(String.format("http://localhost:%s/", TEST_PORT));
-        Login loginClient = target.proxy(Login.class);
+        ILoginResource loginClient = target.proxy(ILoginResource.class);
 
-        Login.LoginForm loginForm = new Login.LoginForm(username, password);
+        ILoginResource.LoginForm loginForm = new ILoginResource.LoginForm(username, password);
         return loginClient.login(loginForm);
     }
 
@@ -71,7 +73,7 @@ public class FullWebStackTestBase<T> extends TestBase {
         client.register(new AuthHeadersRequestFilter(authentication.getToken(), authentication.getUser().getUsername()));
 
         ResteasyWebTarget target = client.target(String.format("http://localhost:%s/", TEST_PORT));
-        Logout logoutClient = target.proxy(Logout.class);
+        ILogoutResource logoutClient = target.proxy(ILogoutResource.class);
 
         logoutClient.logout();
     }

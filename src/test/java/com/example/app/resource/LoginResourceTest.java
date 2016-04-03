@@ -16,9 +16,7 @@ public class LoginResourceTest extends TestBase {
 		String username = "jane";
 		String password = "best";
 
-		Login.LoginForm loginForm = new Login.LoginForm();
-		loginForm.setUsername(username);
-		loginForm.setPassword(password);
+		ILoginResource.LoginForm loginForm = new ILoginResource.LoginForm(username, password);
 
 		Authentication authentication = instance(LoginResource.class).login(loginForm);
 		assertNotNull(authentication.getToken());
@@ -30,9 +28,7 @@ public class LoginResourceTest extends TestBase {
 		String username = "jane";
 		String password = "wrong-pw";
 
-		Login.LoginForm loginForm = new Login.LoginForm();
-		loginForm.setUsername(username);
-		loginForm.setPassword(password);
+		ILoginResource.LoginForm loginForm = new ILoginResource.LoginForm(username, password);
 
 		Authentication authentication = instance(LoginResource.class).login(loginForm);
 		assertNull(authentication);

@@ -1,6 +1,7 @@
 package com.example.app.resource.filter;
 
 import static com.example.app.guice.GuiceInjector.getInjector;
+import static javax.ws.rs.core.Response.Status.UNAUTHORIZED;
 
 import java.io.IOException;
 
@@ -9,6 +10,7 @@ import javax.ws.rs.Priorities;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;
 import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.Provider;
 
 import com.example.app.dao.AuthenticationDAO;
@@ -27,12 +29,17 @@ public class AuthenticationFilter implements ContainerRequestFilter {
         String token = headers.getFirst("Auth-Token");
         String username = headers.getFirst("Username");
 
-        Authentication authentication = getInjector().getInstance(AuthenticationDAO.class).findByToken(token);
+        if (token != null && username != null) {
+            Authentication authentication = getInjector().getInstance(AuthenticationDAO.class).findByToken(token);
 
-        if (authentication != null && username.equals(authentication.getUser().getUsername())) {
-            ApplicationPrincipal applicationPrincipal = new ApplicationPrincipal(authentication);
-            ApplicationSecurityContext applicationSecurityContext = new ApplicationSecurityContext(applicationPrincipal);
-            requestContext.setSecurityContext(applicationSecurityContext);
+            if (authentication != null && username.equals(authentication.getUser().getUsername())) {
+                ApplicationPrincipal applicationPrincipal = new ApplicationPrincipal(authentication);
+                ApplicationSecurityContext applicationSecurityContext = new ApplicationSecurityContext(applicationPrincipal);
+                requestContext.setSecurityContext(applicationSecurityContext);
+            } else {
+                log.info("Authentication NOT valid for " + username + " with token " + token);
+                requestContext.abortWith(Response.status(UNAUTHORIZED).build());
+            }
         }
     }
 }

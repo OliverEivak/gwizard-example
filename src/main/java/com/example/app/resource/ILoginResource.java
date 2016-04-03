@@ -9,21 +9,23 @@ import javax.ws.rs.core.MediaType;
 import com.example.app.entity.Authentication;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Path("/register")
+@Path("/login")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public interface Registration {
+public interface ILoginResource {
 
     @POST
-    Authentication register(RegistrationForm registrationForm);
+    Authentication login(LoginForm loginForm);
 
-    @Data
+    @Getter
+    @Setter
     @NoArgsConstructor
     @AllArgsConstructor
-    class RegistrationForm {
+    class LoginForm {
         private String username;
         private String password;
     }

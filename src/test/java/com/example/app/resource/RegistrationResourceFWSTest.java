@@ -11,16 +11,16 @@ import org.junit.Test;
 import com.example.app.entity.Authentication;
 import com.example.app.test.FullWebStackTestBase;
 
-public class RegistrationResourceFWSTest extends FullWebStackTestBase<Registration> {
+public class RegistrationResourceFWSTest extends FullWebStackTestBase<IRegistrationResource> {
 
     @Test
     public void register() throws Exception {
         String username = "totally-new-user";
         String password = "abc";
 
-        Registration client = getClient(Registration.class);
+        IRegistrationResource client = getClient(IRegistrationResource.class);
 
-        Registration.RegistrationForm registrationForm = new Registration.RegistrationForm(username, password);
+        IRegistrationResource.RegistrationForm registrationForm = new IRegistrationResource.RegistrationForm(username, password);
 
         Authentication authentication = client.register(registrationForm);
 
@@ -35,9 +35,9 @@ public class RegistrationResourceFWSTest extends FullWebStackTestBase<Registrati
         String username = "john";
         String password = "bla";
 
-        Registration client = getClient(Registration.class);
+        IRegistrationResource client = getClient(IRegistrationResource.class);
 
-        Registration.RegistrationForm registrationForm = new Registration.RegistrationForm(username, password);
+        IRegistrationResource.RegistrationForm registrationForm = new IRegistrationResource.RegistrationForm(username, password);
 
         try {
             client.register(registrationForm);

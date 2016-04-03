@@ -24,6 +24,8 @@ database:
   properties:
     hibernate.dialect: org.hibernate.dialect.MySQLDialect
     hibernate.hbm2ddl.auto: validate
+    hibernate.c3p0.maxConnectionAge: 14400
+    hibernate.c3p0.maxIdleTime: 7200
     hibernate.c3p0.idle_test_period: 400
     hibernate.c3p0.preferredTestQuery: SELECT 1
     hibernate.c3p0.testConnectionOnCheckin: true
@@ -52,7 +54,7 @@ logging:
         </rollingPolicy>
 
         <encoder>
-          <pattern>%d %5p %40.40c:%4L [%thread] %-5level %logger{35} - %msg%n</pattern>
+          <pattern>%d [%thread] %5p %logger{35} - %msg%n</pattern>
         </encoder>
       </appender>
 

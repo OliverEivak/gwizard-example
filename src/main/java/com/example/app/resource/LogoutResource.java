@@ -17,7 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 @Path("/logout")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public class LogoutResource extends BaseResource implements Logout {
+public class LogoutResource extends BaseResource implements ILogoutResource {
 
     @Inject
     private LogoutService logoutService;

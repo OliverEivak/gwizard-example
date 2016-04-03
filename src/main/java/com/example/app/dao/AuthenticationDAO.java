@@ -1,7 +1,5 @@
 package com.example.app.dao;
 
-import static org.gwizard.hibernate.EM.em;
-
 import javax.persistence.TypedQuery;
 
 import com.example.app.entity.Authentication;

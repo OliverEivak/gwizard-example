@@ -10,13 +10,13 @@ import org.junit.Test;
 import com.example.app.entity.Authentication;
 import com.example.app.test.FullWebStackTestBase;
 
-public class LogoutResourceFWSTest extends FullWebStackTestBase<Logout> {
+public class LogoutResourceFWSTest extends FullWebStackTestBase<ILogoutResource> {
 
     @Test
     public void testLogout() throws Exception {
         Authentication authentication = login("john", "test");
 
-        Logout client = getClientWithAuthentication(Logout.class, //
+        ILogoutResource client = getClientWithAuthentication(ILogoutResource.class, //
                 authentication.getToken(), authentication.getUser().getUsername());
 
         client.logout();
@@ -24,7 +24,7 @@ public class LogoutResourceFWSTest extends FullWebStackTestBase<Logout> {
 
     @Test
     public void testLogoutWhenNotLoggedIn() throws Exception {
-        Logout client = getClient(Logout.class);
+        ILogoutResource client = getClient(ILogoutResource.class);
 
         try {
             client.logout();

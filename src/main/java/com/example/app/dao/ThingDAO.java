@@ -1,12 +1,10 @@
 package com.example.app.dao;
 
-import static org.gwizard.hibernate.EM.em;
-
 import java.util.List;
 
 import com.example.app.entity.Thing;
 
-public class ThingDAO {
+public class ThingDAO extends BaseDAO<Thing> {
 
     private static int count = 0;
 

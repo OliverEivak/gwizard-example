@@ -1,4 +1,4 @@
-package com.example.app;
+package com.example.app.guice.module;
 
 import javax.inject.Singleton;
 
@@ -6,6 +6,7 @@ import org.gwizard.hibernate.DatabaseConfig;
 import org.gwizard.logging.LoggingConfig;
 import org.gwizard.web.WebServer;
 
+import com.example.app.ApplicationConfig;
 import com.example.app.util.ReflectionUtils;
 import com.example.app.web.ApplicationWebConfig;
 import com.example.app.web.ApplicationWebServer;
@@ -29,16 +30,23 @@ import lombok.extern.slf4j.Slf4j;
 public class ApplicationModule extends AbstractModule {
 	@Override
 	protected void configure() {
+		bindResources();
+		bindServices();
+
 		bind(WebServer.class).to(ApplicationWebServer.class);
+	}
 
-		for (Class resource : ReflectionUtils.getResources()) {
-			log.debug("Binding resource " + resource.getSimpleName());
-			bind(resource);
-		}
-
+	private void bindServices() {
 		for (Class service : ReflectionUtils.getServices()) {
 			log.debug("Binding service " + service.getSimpleName());
 			bind(service).asEagerSingleton();
+		}
+	}
+
+	private void bindResources() {
+		for (Class resource : ReflectionUtils.getResources()) {
+			log.debug("Binding resource " + resource.getSimpleName());
+			bind(resource);
 		}
 	}
 

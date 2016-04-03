@@ -4,8 +4,10 @@ import org.gwizard.hibernate.HibernateModule;
 import org.gwizard.logging.LoggingModule;
 import org.junit.Before;
 
-import com.example.app.ApplicationModule;
+import com.example.app.guice.module.ApplicationModule;
 import com.example.app.guice.GuiceInjector;
+import com.example.app.guice.module.EmptyModule;
+import com.example.app.guice.module.TestModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Module;
