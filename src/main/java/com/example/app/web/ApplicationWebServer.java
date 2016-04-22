@@ -17,6 +17,7 @@ import org.gwizard.web.Scanner;
 import org.gwizard.web.WebConfig;
 import org.gwizard.web.WebServer;
 
+import com.example.app.config.ApplicationWebConfig;
 import com.google.common.base.Preconditions;
 import com.google.inject.servlet.GuiceFilter;
 

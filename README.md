@@ -1,4 +1,4 @@
-# A modified GWizard Example
+# A modified GWizard project base
 A WIP to add more useful basic functionalities to the gwizard example project.
 
 ## Running
@@ -36,7 +36,7 @@ java -jar target/gwizard-example-1.0-SNAPSHOT.jar properties.yml stop
 * Registration (using bcrypt for passwords)
 * Log in and log out
 * Cobertura configuration in pom
-# PersistFilter to start/end a UnitOfWork for every request, this creates and closes an EntityManager
+* PersistFilter to start/end a UnitOfWork for every request, this creates and closes an EntityManager
 
 ## TODO
 * Make a BaseEntity

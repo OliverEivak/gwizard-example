@@ -9,7 +9,7 @@ import javax.inject.Inject;
 
 import org.gwizard.services.Services;
 
-import com.example.app.ApplicationConfig;
+import com.example.app.config.ApplicationConfig;
 import com.example.app.Main;
 import com.example.app.util.SocketUtils;
 import com.google.common.util.concurrent.AbstractExecutionThreadService;

@@ -4,20 +4,20 @@ import java.math.BigInteger;
 import java.security.SecureRandom;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
-import org.gwizard.services.Services;
 import org.mindrot.jbcrypt.BCrypt;
 
 import com.example.app.dao.AuthenticationDAO;
 import com.example.app.dao.UserDAO;
 import com.example.app.entity.Authentication;
 import com.example.app.entity.User;
-import com.google.common.util.concurrent.AbstractIdleService;
 
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class LoginService extends AbstractIdleService {
+@Singleton
+public class LoginService {
 
     @Inject
     private UserDAO userDAO;
@@ -26,21 +26,6 @@ public class LoginService extends AbstractIdleService {
     private AuthenticationDAO authenticationDAO;
 
     private SecureRandom random = new SecureRandom();
-
-    @Inject
-    public LoginService(Services services) {
-        services.add(this);
-    }
-
-    @Override
-    protected void startUp() throws Exception {
-        log.debug("LoginService starting...");
-    }
-
-    @Override
-    protected void shutDown() throws Exception {
-        log.debug("LoginService shutting down...");
-    }
 
     public Authentication login(String username, String password) {
         User user = userDAO.findByUsername(username);

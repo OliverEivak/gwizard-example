@@ -1,13 +1,11 @@
 package com.example.app.services;
 
-import static org.easymock.EasyMock.createNiceMock;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
 
 import org.easymock.EasyMockRunner;
 import org.easymock.Mock;
 import org.easymock.TestSubject;
-import org.gwizard.services.Services;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -19,7 +17,7 @@ import com.example.app.entity.User;
 public class LogoutServiceTest {
 
     @TestSubject
-    private LogoutService logoutService = new LogoutService(createNiceMock(Services.class));
+    private LogoutService logoutService = new LogoutService();
 
     @Mock
     private AuthenticationDAO authenticationDAO;

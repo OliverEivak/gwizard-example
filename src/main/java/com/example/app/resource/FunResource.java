@@ -9,7 +9,7 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 
 import com.codahale.metrics.annotation.Timed;
-import com.example.app.ApplicationConfig;
+import com.example.app.config.ApplicationConfig;
 import com.example.app.services.ExampleService;
 
 import lombok.Data;

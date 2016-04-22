@@ -1,6 +1,5 @@
 package com.example.app.test;
 
-import org.gwizard.rest.RestModule;
 import org.gwizard.services.Run;
 import org.jboss.resteasy.client.jaxrs.ResteasyClient;
 import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
@@ -9,12 +8,11 @@ import org.junit.After;
 import org.junit.Before;
 
 import com.example.app.entity.Authentication;
-import com.example.app.guice.module.ApplicationRestModule;
+import com.example.app.guice.module.RestModule;
 import com.example.app.resource.ILoginResource;
 import com.example.app.resource.ILogoutResource;
 import com.example.app.resource.filter.AuthHeadersRequestFilter;
 import com.google.inject.Module;
-import com.google.inject.util.Modules;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -31,7 +29,7 @@ public class FullWebStackTestBase<T> extends TestBase {
      */
     @Override
     protected Module overrideModule() {
-        return Modules.combine(new RestModule(), new ApplicationRestModule());
+        return new RestModule();
     }
 
     @Before

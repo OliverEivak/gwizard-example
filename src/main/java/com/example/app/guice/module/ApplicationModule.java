@@ -6,13 +6,15 @@ import org.gwizard.hibernate.DatabaseConfig;
 import org.gwizard.logging.LoggingConfig;
 import org.gwizard.web.WebServer;
 
-import com.example.app.ApplicationConfig;
+import com.example.app.config.ApplicationConfig;
+import com.example.app.config.ApplicationWebConfig;
+import com.example.app.resource.BaseResource;
 import com.example.app.util.ReflectionUtils;
-import com.example.app.web.ApplicationWebConfig;
 import com.example.app.web.ApplicationWebServer;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.google.common.util.concurrent.Service;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 
@@ -37,14 +39,14 @@ public class ApplicationModule extends AbstractModule {
 	}
 
 	private void bindServices() {
-		for (Class service : ReflectionUtils.getServices()) {
+		for (Class service : ReflectionUtils.getClasses("com.example.app.services", Service.class)) {
 			log.debug("Binding service " + service.getSimpleName());
 			bind(service).asEagerSingleton();
 		}
 	}
 
 	private void bindResources() {
-		for (Class resource : ReflectionUtils.getResources()) {
+		for (Class resource : ReflectionUtils.getClasses("com.example.app.resource", BaseResource.class)) {
 			log.debug("Binding resource " + resource.getSimpleName());
 			bind(resource);
 		}
@@ -62,11 +64,6 @@ public class ApplicationModule extends AbstractModule {
 	@Provides
 	public LoggingConfig loggingConfig(ApplicationConfig cfg) {
 		return cfg.getLogging();
-	}
-
-	@Provides
-	public ApplicationWebConfig applicationWebConfig(ApplicationConfig cfg) {
-		return cfg.getWeb();
 	}
 
 	@Provides

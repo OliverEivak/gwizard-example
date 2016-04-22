@@ -9,7 +9,7 @@ import javax.ws.rs.core.MultivaluedHashMap;
 
 import org.jboss.resteasy.specimpl.ResteasyHttpHeaders;
 
-import com.example.app.ApplicationConfig;
+import com.example.app.config.ApplicationConfig;
 import com.example.app.test.FullWebStackTestBase;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
