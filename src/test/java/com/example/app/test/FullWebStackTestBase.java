@@ -4,6 +4,7 @@ import org.gwizard.services.Run;
 import org.jboss.resteasy.client.jaxrs.ResteasyClient;
 import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
 import org.jboss.resteasy.client.jaxrs.ResteasyWebTarget;
+import org.jboss.resteasy.plugins.providers.jackson.ResteasyJackson2Provider;
 import org.junit.After;
 import org.junit.Before;
 
@@ -12,6 +13,7 @@ import com.example.app.guice.module.RestModule;
 import com.example.app.resource.ILoginResource;
 import com.example.app.resource.ILogoutResource;
 import com.example.app.resource.filter.AuthHeadersRequestFilter;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.Module;
 
 import lombok.extern.slf4j.Slf4j;
@@ -42,15 +44,22 @@ public class FullWebStackTestBase<T> extends TestBase {
         injector.getInstance(Run.class).stop();
     }
 
+    private ResteasyClient getClientWithObjectMapper() {
+        ResteasyJackson2Provider provider = new ResteasyJackson2Provider();
+        provider.setMapper(instance(ObjectMapper.class));
+
+        return new ResteasyClientBuilder().register(provider).build();
+    }
+
     protected T getClient(Class<T> resourceInterface) {
-        ResteasyClient client = new ResteasyClientBuilder().build();
+        ResteasyClient client = getClientWithObjectMapper();
 
         ResteasyWebTarget target = client.target(String.format("http://localhost:%s/", TEST_PORT));
         return target.proxy(resourceInterface);
     }
 
     protected T getClientWithAuthentication(Class<T> resourceInterface, String token, String username) {
-        ResteasyClient client = new ResteasyClientBuilder().build();
+        ResteasyClient client = getClientWithObjectMapper();
         client.register(new AuthHeadersRequestFilter(token, username));
 
         ResteasyWebTarget target = client.target(String.format("http://localhost:%s/", TEST_PORT));

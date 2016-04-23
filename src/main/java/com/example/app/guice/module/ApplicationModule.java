@@ -1,24 +1,19 @@
 package com.example.app.guice.module;
 
-import javax.inject.Singleton;
-
 import org.gwizard.hibernate.DatabaseConfig;
 import org.gwizard.logging.LoggingConfig;
 import org.gwizard.web.WebServer;
 
 import com.example.app.config.ApplicationConfig;
-import com.example.app.config.ApplicationWebConfig;
+import com.example.app.guice.provider.ObjectMapperProvider;
 import com.example.app.resource.BaseResource;
 import com.example.app.util.ReflectionUtils;
 import com.example.app.web.ApplicationWebServer;
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import com.google.common.util.concurrent.Service;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 
-import io.dropwizard.jackson.Jackson;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -35,6 +30,8 @@ public class ApplicationModule extends AbstractModule {
 		bindResources();
 		bindServices();
 
+		bind(ObjectMapper.class).toProvider(ObjectMapperProvider.class);
+
 		bind(WebServer.class).to(ApplicationWebServer.class);
 	}
 
@@ -50,15 +47,6 @@ public class ApplicationModule extends AbstractModule {
 			log.debug("Binding resource " + resource.getSimpleName());
 			bind(resource);
 		}
-	}
-
-	/** This objectmapper will get used for RESTEasy's JSON responses */
-	@Provides
-	@Singleton
-	public ObjectMapper objectMapper() {
-		return Jackson.newObjectMapper() //
-				.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES) //
-				.enable(SerializationFeature.INDENT_OUTPUT);
 	}
 
 	@Provides
