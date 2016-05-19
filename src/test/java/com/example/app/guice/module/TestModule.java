@@ -10,7 +10,7 @@ import javax.ws.rs.core.MultivaluedHashMap;
 import org.jboss.resteasy.specimpl.ResteasyHttpHeaders;
 
 import com.example.app.config.ApplicationConfig;
-import com.example.app.test.FullWebStackTestBase;
+import com.example.app.test.IntegrationTestBase;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 
@@ -36,7 +36,7 @@ public class TestModule extends AbstractModule {
 
 		cfg.setShutdownPort(10666);
 
-		cfg.getWeb().setPort(FullWebStackTestBase.TEST_PORT);
+		cfg.getWeb().setPort(IntegrationTestBase.TEST_PORT);
 		cfg.getWeb().getInitParameters().put("resteasy.role.based.security", "true");
 		cfg.getWeb().getInitParameters().put("resteasy.providers", "com.example.app.resource.filter.AuthenticationFilter,"
 				+ "com.example.app.resource.exception.ApplicationExceptionMapper");

@@ -1,5 +1,7 @@
 package com.example.app.test;
 
+import java.util.List;
+
 import org.gwizard.services.Run;
 import org.jboss.resteasy.client.jaxrs.ResteasyClient;
 import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
@@ -13,6 +15,8 @@ import com.example.app.guice.module.RestModule;
 import com.example.app.resource.ILoginResource;
 import com.example.app.resource.ILogoutResource;
 import com.example.app.resource.filter.AuthHeadersRequestFilter;
+import com.fasterxml.classmate.ResolvedType;
+import com.fasterxml.classmate.TypeResolver;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.Module;
 
@@ -22,9 +26,16 @@ import lombok.extern.slf4j.Slf4j;
  * <p>This starts the full web stack and allows to issue real http requests against the target. </p>
  */
 @Slf4j
-public class FullWebStackTestBase<T> extends TestBase {
+public class IntegrationTestBase<T> extends TestBase {
 
     public static int TEST_PORT = 18080;
+
+    private Class<T> interfaceClass;
+
+    public IntegrationTestBase() {
+        List<ResolvedType> typeParameters = new TypeResolver().resolve(this.getClass()).typeParametersFor(IntegrationTestBase.class);
+        interfaceClass = (Class<T>) typeParameters.get(0).getErasedType();
+    }
 
     /**
      * We need to get the RestModule included if we want the web stack to run
@@ -51,19 +62,19 @@ public class FullWebStackTestBase<T> extends TestBase {
         return new ResteasyClientBuilder().register(provider).build();
     }
 
-    protected T getClient(Class<T> resourceInterface) {
+    protected T getClient() {
         ResteasyClient client = getClientWithObjectMapper();
 
         ResteasyWebTarget target = client.target(String.format("http://localhost:%s/", TEST_PORT));
-        return target.proxy(resourceInterface);
+        return target.proxy(interfaceClass);
     }
 
-    protected T getClientWithAuthentication(Class<T> resourceInterface, String token, String username) {
+    protected T getClientWithAuthentication(Authentication authentication) {
         ResteasyClient client = getClientWithObjectMapper();
-        client.register(new AuthHeadersRequestFilter(token, username));
+        client.register(new AuthHeadersRequestFilter(authentication.getToken(), authentication.getUser().getUsername()));
 
         ResteasyWebTarget target = client.target(String.format("http://localhost:%s/", TEST_PORT));
-        return target.proxy(resourceInterface);
+        return target.proxy(interfaceClass);
     }
 
     protected Authentication login(String username, String password) {

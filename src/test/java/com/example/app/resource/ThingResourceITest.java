@@ -15,10 +15,11 @@ import javax.ws.rs.PathParam;
 
 import org.junit.Test;
 
+import com.example.app.entity.Authentication;
 import com.example.app.entity.Thing;
-import com.example.app.test.FullWebStackTestBase;
+import com.example.app.test.IntegrationTestBase;
 
-public class ThingResourceFWSTest extends FullWebStackTestBase<ThingResourceFWSTest.ThingsClient> {
+public class ThingResourceITest extends IntegrationTestBase<ThingResourceITest.ThingsClient> {
 
 	@Path("/things")
 	public static interface ThingsClient {
@@ -44,7 +45,7 @@ public class ThingResourceFWSTest extends FullWebStackTestBase<ThingResourceFWST
 
 	@Test
 	public void thingsCanBeCreatedAndRetrieved() throws Exception {
-		ThingsClient things = getClient(ThingsClient.class);
+		ThingsClient things = getClient();
 
 		Thing created = things.create();
 
@@ -55,7 +56,7 @@ public class ThingResourceFWSTest extends FullWebStackTestBase<ThingResourceFWST
 
 	@Test
 	public void thingsCanBeListed() throws Exception {
-		ThingsClient things = getClient(ThingsClient.class);
+		ThingsClient things = getClient();
 
 		Thing created = things.create();
 
@@ -67,7 +68,7 @@ public class ThingResourceFWSTest extends FullWebStackTestBase<ThingResourceFWST
 
 	@Test
 	public void secretThingsCanNotBeListedWithoutAuthentication() throws Exception {
-		ThingsClient things = getClient(ThingsClient.class);
+		ThingsClient things = getClient();
 
 		try {
 			things.listSecretly();
@@ -79,7 +80,8 @@ public class ThingResourceFWSTest extends FullWebStackTestBase<ThingResourceFWST
 
 	@Test
 	public void secretThingsCanBeListedWithAuthentication() throws Exception {
-		ThingsClient things = getClientWithAuthentication(ThingsClient.class, "asd", "john");
+		Authentication authentication = login("john", "test");
+		ThingsClient things = getClientWithAuthentication(authentication);
 
 		Thing created = things.create();
 

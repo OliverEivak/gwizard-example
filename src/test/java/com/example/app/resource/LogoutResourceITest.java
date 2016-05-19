@@ -8,23 +8,22 @@ import javax.ws.rs.ClientErrorException;
 import org.junit.Test;
 
 import com.example.app.entity.Authentication;
-import com.example.app.test.FullWebStackTestBase;
+import com.example.app.test.IntegrationTestBase;
 
-public class LogoutResourceFWSTest extends FullWebStackTestBase<ILogoutResource> {
+public class LogoutResourceITest extends IntegrationTestBase<ILogoutResource> {
 
     @Test
     public void testLogout() throws Exception {
         Authentication authentication = login("john", "test");
 
-        ILogoutResource client = getClientWithAuthentication(ILogoutResource.class, //
-                authentication.getToken(), authentication.getUser().getUsername());
+        ILogoutResource client = getClientWithAuthentication(authentication);
 
         client.logout();
     }
 
     @Test
     public void testLogoutWhenNotLoggedIn() throws Exception {
-        ILogoutResource client = getClient(ILogoutResource.class);
+        ILogoutResource client = getClient();
 
         try {
             client.logout();
