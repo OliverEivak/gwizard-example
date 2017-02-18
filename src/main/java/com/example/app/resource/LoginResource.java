@@ -9,7 +9,6 @@ import javax.ws.rs.core.MediaType;
 import com.example.app.entity.Authentication;
 import com.example.app.services.LoginService;
 import com.google.inject.Inject;
-import com.google.inject.persist.Transactional;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -23,7 +22,6 @@ public class LoginResource extends BaseResource implements ILoginResource {
     private LoginService loginService;
 
     @POST
-    @Transactional
     public Authentication login(ILoginResource.LoginForm loginForm) {
         return loginService.login(loginForm.getUsername(), loginForm.getPassword());
     }

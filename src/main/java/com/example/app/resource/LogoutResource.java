@@ -9,7 +9,6 @@ import javax.ws.rs.core.MediaType;
 
 import com.example.app.services.LogoutService;
 import com.google.inject.Inject;
-import com.google.inject.persist.Transactional;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -24,7 +23,6 @@ public class LogoutResource extends BaseResource implements ILogoutResource {
 
     @POST
     @RolesAllowed({"USER"})
-    @Transactional
     public void logout() {
         logoutService.logout(getAuthentication());
     }

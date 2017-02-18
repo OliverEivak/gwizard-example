@@ -15,7 +15,6 @@ import com.codahale.metrics.annotation.Timed;
 import com.example.app.entity.Thing;
 import com.example.app.services.ThingService;
 import com.google.inject.Inject;
-import com.google.inject.persist.Transactional;
 
 /**
  * At least this resource is named appropriately.
@@ -29,14 +28,12 @@ public class ThingResource extends BaseResource {
     private ThingService thingService;
 
     @POST
-    @Transactional
     public Thing create() {
         return thingService.create();
     }
 
     @Timed
     @GET
-    @Transactional
     public List<Thing> list() {
         return thingService.findAll();
     }
@@ -44,7 +41,6 @@ public class ThingResource extends BaseResource {
     @Timed
     @GET
     @RolesAllowed({"USER"})
-    @Transactional
     @Path("secret")
     public List<Thing> listSecretly() {
         return thingService.findAll();
@@ -52,7 +48,6 @@ public class ThingResource extends BaseResource {
 
     @Timed
     @GET
-    @Transactional
     @Path("ex")
     public Thing getException() {
         thingService.create(); // This will get rolled back
@@ -61,7 +56,6 @@ public class ThingResource extends BaseResource {
 
     @Timed
     @GET
-    @Transactional
     @Path("{thingId}")
     public Thing get(@PathParam("thingId") Long thingId) {
         return thingService.find(thingId);

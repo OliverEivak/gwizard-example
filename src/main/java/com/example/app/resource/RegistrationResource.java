@@ -13,7 +13,6 @@ import com.example.app.entity.User;
 import com.example.app.services.LoginService;
 import com.example.app.services.UserService;
 import com.google.inject.Inject;
-import com.google.inject.persist.Transactional;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -30,7 +29,6 @@ public class RegistrationResource extends BaseResource implements IRegistrationR
     private LoginService loginService;
 
     @POST
-    @Transactional
     public Authentication register(RegistrationForm registrationForm) {
         User user = new User();
         user.setUsername(registrationForm.getUsername());
