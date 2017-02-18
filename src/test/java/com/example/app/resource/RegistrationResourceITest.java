@@ -1,8 +1,8 @@
 package com.example.app.resource;
 
-import static org.assertj.core.api.StrictAssertions.fail;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
 
 import javax.ws.rs.InternalServerErrorException;
 
