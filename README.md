@@ -8,8 +8,6 @@ $ mvn install
 $ java -jar target/gwizard-example-1.0-SNAPSHOT.jar properties.yml
 ```
 
-**Note:** this project needs gwizard-hibernate 0.7-SNAPSHOT
-
 Stopping
 ```
 java -jar target/gwizard-example-1.0-SNAPSHOT.jar properties.yml stop
@@ -36,8 +34,6 @@ java -jar target/gwizard-example-1.0-SNAPSHOT.jar properties.yml stop
 * Registration (using bcrypt for passwords)
 * Log in and log out
 * Cobertura configuration in pom
-* PersistFilter to start/end a UnitOfWork for every request, this creates and closes an EntityManager
-
-## TODO
-* Make a BaseEntity
-* Providers as separate classes maybe
+* PersistFilter to start/end a UnitOfWork for every request, this creates and closes an EntityManager. 
+Also starts and closes a transaction. 
+No need to add @Transactional to every resource. 
